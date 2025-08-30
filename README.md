@@ -17,7 +17,7 @@ Includes optional model installs, upscalers, interpolation, LoRA support, and he
 - **Models / Checkpoints:**
   - `umt5_xxl_fp8_e4m3fn_scaled.safetensors` for CLIP
   - `wan2.2_vae` (default) or `wan2.1_vae` (optional)
-  - `5xlsdir.pth` upscaler
+  - `4xlsdir.pth` upscaler
 - **ComfyUI Built-ins:**
   - LoRA support (disabled by default)
   - Downloader for [CivitAI](https://civitai.com/) models  
