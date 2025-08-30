@@ -1,9 +1,9 @@
-# ComfyUI + WAN 2.2 on RunPod
+# ComfyUI WAN 2.2 - S2V
 
-Containerized environment for running **ComfyUI** with **WAN 2.2 (i2v & s2v)** on NVIDIA GPUs via RunPod.  
-Includes optional model installs, upscalers, interpolation, LoRA support, and helper utilities.  
+**ComfyUI** with **WAN 2.2 (s2v)** on NVIDIA GPUs via RunPod.  
+Includes optional model installs (s2v & i2v), upscalers, interpolation, LoRA support, and helper utilities.
 
-**Version:** v0.0.1
+**Version:** v0.0.2
 
 ---
 
