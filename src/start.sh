@@ -163,7 +163,7 @@ fi
 if [ "$INSTALL_WAN22_S2V" == "true" ]; then
   echo "Downloading Wan 2.2 S2V"
 
-  download_model "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_s2v_14B_bf16.safetensors" "$DIFFUSION_MODELS_DIR/wan2.2_i2v_high_noise_14B_fp16.safetensors"
+  download_model "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_s2v_14B_bf16.safetensors" "$DIFFUSION_MODELS_DIR/wan2.2_s2v_14B_bf16.safetensors"
 
 fi
 
@@ -266,37 +266,27 @@ fi
 echo "Finished downloading models!"
 
 
-echo "Checking and copying workflow..."
-mkdir -p "$WORKFLOW_DIR"
-
-# Ensure the file exists in the current directory before moving it
-cd /
-
+echo "Checking and copying workflow JSONs..."
+WORKFLOW_DIR="$NETWORK_VOLUME/ComfyUI/user/default/workflows"
 SOURCE_DIR="/comfyui-wan/workflows"
 
-# Ensure destination directory exists
 mkdir -p "$WORKFLOW_DIR"
 
-SOURCE_DIR="/comfyui-wan/workflows"
+if [[ -d "$SOURCE_DIR" ]]; then
+  # copy every *.json (preserve subfolder structure)
+  while IFS= read -r -d '' f; do
+    rel="${f#$SOURCE_DIR/}"
+    dest="$WORKFLOW_DIR/$rel"
+    mkdir -p "$(dirname "$dest")"
+    cp -f "$f" "$dest"
+  done < <(find "$SOURCE_DIR" -type f -name '*.json' -print0)
 
-# Ensure destination directory exists
-mkdir -p "$WORKFLOW_DIR"
-
-# Loop over each subdirectory in the source directory
-for dir in "$SOURCE_DIR"/*/; do
-    # Skip if no directories match (empty glob)
-    [[ -d "$dir" ]] || continue
-
-    dir_name="$(basename "$dir")"
-    dest_dir="$WORKFLOW_DIR/$dir_name"
-
-    if [[ -e "$dest_dir" ]]; then
-        echo "Directory already exists in destination. Deleting source: $dir"
-        rm -rf "$dir"
-    else
-        echo "Moving: $dir to $WORKFLOW_DIR"
-        mv "$dir" "$WORKFLOW_DIR/"
-    fi
+  # ensure readable
+  chmod -R a+r "$WORKFLOW_DIR"
+  echo "✅ Workflows copied to $WORKFLOW_DIR"
+else
+  echo "⚠️ No workflows dir found at $SOURCE_DIR"
+fi
 done
 
 if [ "$change_preview_method" == "true" ]; then
