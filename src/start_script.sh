@@ -26,6 +26,7 @@ fi
 # --- Clone shallow, specific branch ---
 rm -rf "$TARGET_DIR"
 git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TARGET_DIR"
+export COMFY_REPO_DIR="$TARGET_DIR"
 
 # --- Move entry script into place ---
 SRC_PATH="$TARGET_DIR/$ENTRY_SRC_REL"
