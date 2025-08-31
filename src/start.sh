@@ -147,6 +147,7 @@ download_model() {
 # Define base paths
 DIFFUSION_MODELS_DIR="$NETWORK_VOLUME/ComfyUI/models/diffusion_models"
 TEXT_ENCODERS_DIR="$NETWORK_VOLUME/ComfyUI/models/text_encoders"
+AUDIO_ENCODERS_DIR="$NETWORK_VOLUME/ComfyUI/models/audio_encoders"
 CLIP_VISION_DIR="$NETWORK_VOLUME/ComfyUI/models/clip_vision"
 VAE_DIR="$NETWORK_VOLUME/ComfyUI/models/vae"
 LORAS_DIR="$NETWORK_VOLUME/ComfyUI/models/loras"
@@ -164,6 +165,8 @@ if [ "$INSTALL_WAN22_S2V" == "true" ]; then
   echo "Downloading Wan 2.2 S2V"
 
   download_model "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/diffusion_models/wan2.2_s2v_14B_bf16.safetensors" "$DIFFUSION_MODELS_DIR/wan2.2_s2v_14B_bf16.safetensors"
+  download_model "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/audio_encoders/wav2vec2_large_english_fp16.safetensors" "$AUDIO_ENCODERS_DIR/wav2vec2_large_english_fp16.safetensors"
+  download_model "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/loras/wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors" "$LORAS_DIR/wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors"
 
 fi
 
