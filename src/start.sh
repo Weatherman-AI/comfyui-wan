@@ -267,27 +267,34 @@ echo "Finished downloading models!"
 
 
 echo "Checking and copying workflow JSONs..."
-WORKFLOW_DIR="$NETWORK_VOLUME/ComfyUI/user/default/workflows"
-SOURCE_DIR="/comfyui-wan/workflows"
 
+# ComfyUI's workflow folder (this is the right place)
+WORKFLOW_DIR="$NETWORK_VOLUME/ComfyUI/user/default/workflows"
+
+# Where your repo is (provided by start_script.sh). Fallbacks if absent.
+REPO_DIR="${COMFY_REPO_DIR:-/workspace/comfyui-wan}"
+[ -d "$REPO_DIR" ] || REPO_DIR="/comfyui-wan"
+
+SOURCE_DIR="$REPO_DIR/workflows"
 mkdir -p "$WORKFLOW_DIR"
 
-if [[ -d "$SOURCE_DIR" ]]; then
-  # copy every *.json (preserve subfolder structure)
-  while IFS= read -r -d '' f; do
-    rel="${f#$SOURCE_DIR/}"
-    dest="$WORKFLOW_DIR/$rel"
-    mkdir -p "$(dirname "$dest")"
-    cp -f "$f" "$dest"
-  done < <(find "$SOURCE_DIR" -type f -name '*.json' -print0)
+if [ -d "$SOURCE_DIR" ]; then
+  # Copy all *.json, preserving subfolders — portable (no process substitution)
+  find "$SOURCE_DIR" -type f -name '*.json' -print0 \
+  | while IFS= read -r -d '' f; do
+      rel="${f#"$SOURCE_DIR/"}"
+      dest="$WORKFLOW_DIR/$rel"
+      mkdir -p "$(dirname "$dest")"
+      cp -f "$f" "$dest"
+    done
 
-  # ensure readable
   chmod -R a+r "$WORKFLOW_DIR"
-  echo "✅ Workflows copied to $WORKFLOW_DIR"
+  echo "✅ Workflows copied to: $WORKFLOW_DIR"
+  echo "Contents:"
+  find "$WORKFLOW_DIR" -maxdepth 3 -type f -name '*.json' -print | sed 's/^/ - /'
 else
-  echo "⚠️ No workflows dir found at $SOURCE_DIR"
+  echo "⚠️ No workflows dir found at: $SOURCE_DIR"
 fi
-done
 
 if [ "$change_preview_method" == "true" ]; then
     echo "Updating default preview method..."
